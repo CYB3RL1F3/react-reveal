@@ -7,7 +7,7 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import { bool, string, number, object, oneOf, oneOfType } from 'prop-types';
+import { bool, string, number, object, oneOf, oneOfType, shape } from 'prop-types';
 import { defaults } from './lib/globals';
 import wrap from './lib/wrap';
 import Fade from './in-and-out/Fade';
@@ -37,7 +37,6 @@ const
     inEffect: Fade(defaults),
     outEffect: Fade({ out: true, ...defaults }),
   };
-
 
 
 function Reveal({ children, timeout, duration, delay, count, forever, durationOut, delayOut, countOut, foreverOut, effect, effectOut, inEffect, outEffect,  ...props}) {

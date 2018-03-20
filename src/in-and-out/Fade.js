@@ -77,7 +77,7 @@ function make(reverse, { distance, left, right, up, down, top, bottom, big, mirr
 }
 
 function Fade({ children, out, forever,
-              timeout, duration = defaults.duration, delay = defaults.delay, count = defaults.count, ...props } = defaults, context = false) {
+              timeout, easing = 'linear', custom = {}, duration = defaults.duration, delay = defaults.delay, count = defaults.count, ...props } = defaults, context = false) {
   const effect = {
     make,
     duration: timeout === undefined ? duration : timeout,
