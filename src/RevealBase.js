@@ -55,13 +55,13 @@ const
     ssrReveal: bool,
     collapseOnly: bool,
     ssrFadeout: bool,
-    cascadedDuration: bool,
+    effectPerCascade: bool,
   },
   defaultProps = {
     fraction: 0.2,
     //when: true,
     refProp: 'ref',
-    cascadedDuration: false,
+    effectPerCascade: false,
     //margin: 0,
   },
   //,
@@ -357,7 +357,8 @@ class RevealBase extends React.Component {
           style: {
             ...child.props.style,
             ...this.state.style,
-            animationDuration: Math.round(cascade( reverse ? i-- : i++ /*i++*/,0 , count, duration, total, this.props.cascadedDuration)) + 'ms',
+            animationDuration: Math.round(cascade( reverse ? i-- : i++ /*i++*/,0 , count, duration, total, this.props.effectPerCascade)) + 'ms',
+            animationTimingFunction: this.props.effectPerCascade && this.props.easing ? this.props.easing : 'linear',
           },
           //ref: i === count? (el => this.finalEl = el) : void 0,
         })

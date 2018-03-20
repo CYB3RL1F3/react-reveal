@@ -33,8 +33,8 @@ export function insertRule(rule) {
   }
 }
 
-export function cascade(i, start, end, duration, total, cascadedDuration) {
-  if (cascadedDuration) {
+export function cascade(i, start, end, duration, total, effectPerCascade) {
+  if (effectPerCascade) {
     console.log(i * duration);
     return i * duration;
   }
