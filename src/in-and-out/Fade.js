@@ -61,8 +61,8 @@ function make(reverse, { distance, left, right, up, down, top, bottom, big, mirr
     y = down || top ? '-'+ dist : ( up || bottom ? dist : '0' );
   }
 
-  let anim1 = '';
-  let anim2 = '';
+  let animStart = '';
+  let animEnd = '';
   if (custom && custom.from && custom.to) {
     animStart = cssStringify(!reverse ? custom.from : custom.to);
     animEnd = cssStringify(reverse ? custom.from : custom.to);
