@@ -7,7 +7,7 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import { bool, number, string } from 'prop-types';
+import { bool, number, string, shape } from 'prop-types';
 import { animation, defaults } from '../lib/globals';
 import wrap from '../lib/wrap';
 
@@ -27,14 +27,31 @@ const
     delay: number,
     count: number,
     forever: bool,
+    easing: string,
+    custom: shape({
+      from: shape(),
+      to: shape()
+    })
   };
 
+const camelCaseToDash = myStr => {
+    return myStr.replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase();
+}
+
+const cssStringify = (obj) => {
+  let css = '';
+  Object.keys(obj).forEach(key => css += `${camelCaseToDash(key)}: ${obj[key]}; `);
+  return css;
+}
+
 const lookup = {};
-function make(reverse, { distance, left, right, up, down, top, bottom, big, mirror, opposite, }) {
+function make(reverse, { distance, left, right, up, down, top, bottom, big, mirror, opposite, easing, custom, }) {
   const checksum = (distance?distance.toString():0) + ( (left?1:0) | (right?2:0) | (top||down?4:0) | (bottom||up?8:0) | (mirror?16:0) | (opposite?32:0) | (reverse?64:0) | (big?128:0));
   if (lookup.hasOwnProperty(checksum))
     return lookup[checksum];
+
   const transform = left||right||up||down||top||bottom;
+
   let x, y;
   if (transform) {
     if ( !mirror !== !(reverse&&opposite)) // Boolean XOR
@@ -43,10 +60,19 @@ function make(reverse, { distance, left, right, up, down, top, bottom, big, mirr
     x = left ? '-' + dist : ( right ? dist : '0' );
     y = down || top ? '-'+ dist : ( up || bottom ? dist : '0' );
   }
+
+  let anim1 = '';
+  let anim2 = '';
+  if (custom && custom.from && custom.to) {
+    animStart = cssStringify(!reverse ? custom.from : custom.to);
+    animEnd = cssStringify(reverse ? custom.from : custom.to);
+  }
+
   lookup[checksum] = animation(
-    `${!reverse?'from':'to'} {opacity: 0;${ transform ? ` transform: translate3d(${x}, ${y}, 0);` : ''}}
-     ${ reverse?'from':'to'} {opacity: 1;transform: none;} `
+    `${!reverse?'from':'to'} {${animStart} opacity: 0; ${ transform ? ` transform: translate3d(${x}, ${y}, 0);` : ''}}
+     ${ reverse?'from':'to'} {${animEnd} opacity: 1; transform: none;} `
   );
+
   return lookup[checksum];
 }
 
@@ -58,7 +84,10 @@ function Fade({ children, out, forever,
     delay,
     forever,
     count,
-    style: { animationFillMode: 'both', },
+    style: {
+      animationFillMode: 'both',
+      animationTimingFunction: easing || 'linear',
+    },
     reverse: props.left,
   };
   return context ? wrap(props, effect, effect, children) : effect;
