@@ -28,6 +28,7 @@ const
     count: number,
     forever: bool,
     easing: string,
+    cascadedDuration: bool,
     custom: shape({
       from: shape(),
       to: shape()

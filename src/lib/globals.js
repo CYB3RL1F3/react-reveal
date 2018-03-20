@@ -33,7 +33,11 @@ export function insertRule(rule) {
   }
 }
 
-export function cascade(i, start, end, duration, total) {
+export function cascade(i, start, end, duration, total, cascadedDuration) {
+  if (cascadedDuration) {
+    console.log(i * duration);
+    return duration;
+  }
   const minv = Math.log(duration), maxv = Math.log(total), scale = (maxv-minv) / (end-start);
   return Math.exp(minv + scale*(i-start));
 }
