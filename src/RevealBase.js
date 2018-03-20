@@ -56,12 +56,16 @@ const
     collapseOnly: bool,
     ssrFadeout: bool,
     effectPerCascade: bool,
+    withDeceleration: number,
+    decelerationThreshold: number,
   },
   defaultProps = {
     fraction: 0.2,
     //when: true,
     refProp: 'ref',
     effectPerCascade: false,
+    withDeceleration: 0,
+    decelerationThreshold: 0,
     //margin: 0,
   },
   //,
@@ -357,8 +361,7 @@ class RevealBase extends React.Component {
           style: {
             ...child.props.style,
             ...this.state.style,
-            animationDuration: Math.round(cascade( reverse ? i-- : i++ /*i++*/,0 , count, duration, total, this.props.effectPerCascade)) + 'ms',
-            animationTimingFunction: this.props.effectPerCascade && this.props.easing ? this.props.easing : 'linear',
+            animationDuration: Math.round(cascade( reverse ? i-- : i++ /*i++*/,0 , count, duration, total, this.props.effectPerCascade, this.props.withDeceleration, this.props.decelerationThreshold)) + 'ms',
           },
           //ref: i === count? (el => this.finalEl = el) : void 0,
         })
