@@ -57,7 +57,9 @@ const
     ssrFadeout: bool,
     effectPerCascade: bool,
     withDeceleration: number,
+    durationCascade: number,
     decelerationThreshold: number,
+    cascadeEasing: string,
   },
   defaultProps = {
     fraction: 0.2,
@@ -66,6 +68,7 @@ const
     effectPerCascade: false,
     withDeceleration: 0,
     decelerationThreshold: 0,
+    cascadeEasing: 'linear',
     //margin: 0,
   },
   //,
@@ -335,6 +338,12 @@ class RevealBase extends React.Component {
     //  this.reveal(this.props);
   }
 
+  getDelay(duration, i) {
+    const { withDeceleration, decelerationThreshold } = this.props;
+    if (i < decelerationThreshold) return (i * duration) / 2;
+    return (i * (duration - (withDeceleration * (i - decelerationThreshold)))) / 2;
+  }
+
   cascade(children) {
     let newChildren;
     if (typeof children === 'string') {
@@ -349,6 +358,8 @@ class RevealBase extends React.Component {
           count = newChildren.length,
           total = duration*2;
           //reverse = false;
+    let { durationCascade } = this.props;
+    if (!durationCascade) durationCascade = duration;
     if (this.props.collapse) {
       total = parseInt(this.state.style.animationDuration, 10);
       duration = total/2;
@@ -361,6 +372,8 @@ class RevealBase extends React.Component {
           style: {
             ...child.props.style,
             ...this.state.style,
+            animationTimingFunction: this.props.cascadeEasing,
+            'animationDelay': `${this.props.effectPerCascade ? this.getDelay(durationCascade, reverse ? i - 1 : i + 1) : 0}ms`,
             animationDuration: Math.round(cascade( reverse ? i-- : i++ /*i++*/,0 , count, duration, total, this.props.effectPerCascade, this.props.withDeceleration, this.props.decelerationThreshold)) + 'ms',
           },
           //ref: i === count? (el => this.finalEl = el) : void 0,

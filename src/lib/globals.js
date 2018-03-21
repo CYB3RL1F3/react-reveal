@@ -35,10 +35,7 @@ export function insertRule(rule) {
 
 export function cascade(i, start, end, duration, total, effectPerCascade, withDeceleration, decelerationThreshold) {
   if (effectPerCascade) {
-    if (withDeceleration) {
-      return i * (duration - (i > decelerationThreshold ? ((decelerationThreshold - i) * withDeceleration) : 0))
-    }
-    return i * duration;
+    return duration;
   }
   const minv = Math.log(duration), maxv = Math.log(total), scale = (maxv-minv) / (end-start);
   return Math.exp(minv + scale*(i-start));
